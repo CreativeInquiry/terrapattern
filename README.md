@@ -15,24 +15,23 @@ We intend to create a web interface for this project that will allow web-savvy b
 
 There are eight steps for this project: 
 
-* The first step is to identify features for the training set.
-* The second step is to build a neural net that is capable of identifying features in satellite photography.
-* The third step is to generate a lookup table of features and their locations
-* The fourth step is to build a front-end that allows users to identify features and desired geographical ranges
-* The fifth step is to design a back-end that can run these searches
-* The sixth step is to develop a notification system
-* The seventh step is to develop a front-end that allows a user to browse through their located instances
-* The eighth step is to provide a interface for downloading the located features.
+1. Identify features for the training set.
+2. Build a neural net that is capable of identifying features in satellite photography.
+3. Generate a lookup table of features and their locations
+4. Build a front-end that allows users to identify features and desired geographical ranges
+5. Design a back-end that can run these searches
+7. Develop a front-end that allows a user to browse through their located instances
+8. Provide a interface for downloading the located features.
 
 ## Step 1:  Build the Training Set
 
-Kyle is our neural network trainer (which means that I am imagining him in a set of high black boots and a whip), and will be writing some sort of magical code that will use math and such things to detect things that we cannot begin to describe.  *(Kyle, feel free to elaborate or clarify as needed.)*  This theoretical neural net needs to be trained on a set of tagged images.
+Kyle is our neural network trainer <small>(I am imagining him in a set of high black boots and a whip)</small> and will be writing some sort of magical code that will use math and such things to detect things that we cannot begin to describe.  *(Kyle, feel free to elaborate or clarify as needed.)*  This theoretical neural net needs to be trained on a set of tagged images.
 
-Kyle has asked for this to be delivered to him as a single directory, named `training_set`, containing 1000 folders, each named with its respective tag as a singular noun.  If the name contains multiple words, they will be concatinated into a single word, such as "swimmingpool" or "dunkindonuts".Each folder will contain 1000 images of a satellite photograph containing an image of the entity described by the tag.
+Kyle has asked for this to be delivered to him as a single directory, named `training_set`, containing 1000 folders, each named with its respective tag as a singular noun.  If the name contains multiple words, they will be concatinated into a single word, such as `swimmingpool` or `dunkindonuts`.Each folder will contain 1000 images of a satellite photograph containing an image of the entity described by the tag.
 
-Each of these images will be a square, 100px by 100px jpeg, compressed at 80%.  *(Kyle, please correct this data).*
+Each of these images will be a square 100px by 100px jpeg, compressed at 80%.  *(Kyle, please correct this spec with actual information).*
 
-Each of these images will be named with the lat/lng combination of the image, as well as the tag name.  Each of these three datapoints will be separated by underscores. For example:  
+Each of these images will be named with the lat/lng combination of the image as well as the tag name.  Each of these three datapoints will be separated by underscores. For example:  
 
 * My house, at lat: 40.481760, lng: -79.95402, would be recorded as `training_set/house/40.481760_-79.95402_house.jpg`
 * The Emlenton Swimming Pool, at 41.181354, -79.704974 would be recorded as `training_set/swimmingpool/41.181354_-79.704974_swimmingpool.jpg`
