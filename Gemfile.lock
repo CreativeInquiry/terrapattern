@@ -1,0 +1,16 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    dotenv (2.0.1)
+    ethon (0.8.0)
+      ffi (>= 1.3.0)
+    ffi (1.9.10)
+    typhoeus (0.8.0)
+      ethon (>= 0.8.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  dotenv
+  typhoeus

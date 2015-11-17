@@ -40,10 +40,10 @@ Kyle has asked for this to be delivered to him as a single directory, named `tra
 
 Each of these images will be a square 100px by 100px jpeg, compressed at 80%.  *(Kyle, please correct this spec with actual information).*
 
-Each of these images will be named with the lat/lng combination of the image as well as the tag name.  Each of these three datapoints will be separated by underscores. For example:  
+Each of these images will be named with the tag name as well as the lat/lng combination of the image.  Each of these three datapoints will be separated by underscores. For example:  
 
-* My house, at lat: 40.481760, lng: -79.95402, would be recorded as `training_set/house/40.481760_-79.95402_house.jpg`
-* The Emlenton Swimming Pool, at 41.181354, -79.704974 would be recorded as `training_set/swimmingpool/41.181354_-79.704974_swimmingpool.jpg`
+* My house, at lat: 40.481760, lng: -79.95402, would be recorded as `training_set/house/house_40.481760_-79.95402.jpg`
+* The Emlenton Swimming Pool, at 41.181354, -79.704974 would be recorded as `training_set/swimmingpool/swimmingpool_41.181354_-79.704974.jpg`
 
 *(Kyle, do we also want to distinguish these by source?  i.e., which service provided the image?  How about by zoom level?)*
 
