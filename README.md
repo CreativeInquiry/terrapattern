@@ -13,6 +13,12 @@ In this initial prototype, we intend to create a web interface that will allow w
 
 *(Golan, feel free to add more stuff here, and correct what I've written.)*
 
+## Wiki
+
+Supplementary research is on the wiki.  Some things to look at include:
+
+* [Imagery Comparison](https://github.com/workergnome/terrapattern/wiki/Satellite-Imagery-Information)
+
 ## Initial Steps
 
 There are eight steps for this project: 
