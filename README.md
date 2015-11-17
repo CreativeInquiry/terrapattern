@@ -17,17 +17,18 @@ There are eight steps for this project:
 
 1. Identify features for the training set.
 2. Build a neural net that is capable of identifying features in satellite photography.
-3. Generate a lookup table of features and their locations
-4. Build a front-end that allows users to identify features and desired geographical ranges
-5. Design a back-end that can run these searches
-7. Develop a front-end that allows a user to browse through their located instances
+3. Generate a lookup table of features and their locations.
+4. Build a front-end that allows users to identify features and desired geographical ranges.
+5. Design a back-end that can run these searches.
+6. Notify the user that their search is complete.
+7. Develop a front-end that allows a user to browse through their located instances.
 8. Provide a interface for downloading the located features.
 
 ## Step 1:  Build the Training Set
 
 Kyle is our neural network trainer <small>(I am imagining him in a set of high black boots and a whip)</small> and will be writing some sort of magical code that will use math and such things to detect things that we cannot begin to describe.  *(Kyle, feel free to elaborate or clarify as needed.)*  This theoretical neural net needs to be trained on a set of tagged images.
 
-Kyle has asked for this to be delivered to him as a single directory, named `training_set`, containing 1000 folders, each named with its respective tag as a singular noun.  If the name contains multiple words, they will be concatinated into a single word, such as `swimmingpool` or `dunkindonuts`.Each folder will contain 1000 images of a satellite photograph containing an image of the entity described by the tag.
+Kyle has asked for this to be delivered to him as a single directory, named `training_set`, containing 1000 folders, each named with its respective tag as a singular noun.  If the name contains multiple words, they will be concatenated into a single word, such as `swimmingpool` or `dunkindonuts`.Each folder will contain 1000 images of a satellite photograph containing an image of the entity described by the tag.
 
 Each of these images will be a square 100px by 100px jpeg, compressed at 80%.  *(Kyle, please correct this spec with actual information).*
 
@@ -69,15 +70,31 @@ Kyle, this is your baby.  I don't know enough to start here.
 
 ## Step 3: Develop a Lookup
 
-Kyle, you and I should work together on this, if only to develop a "contract" for how we will interface here.
+Kyle, you and I should work together on this, if only to develop a "contract" for how we will interface here.  If I remember correctly from our dinner together, the idea here is to create a hashtable of features and locations, so that the search will not need to actually re-process each image, but instead do something more efficient.  
+
+Would the most appropriate way for this to work be for me the front-end to provide a set of square images, like the ones we're doing feature detection on?  a set of lat/lng pairs?  a geographical boundary of the perimeter of the region of interest? 
 
 ## Step 4: Create a UI for identifying features and ranges
 
 Golan, we should define exactly what we think that people will do here.
 
+My thoughts are that we would begin by allowing the user to create an account.  Unless the prototype is entirely designed to be used by *us*, we're going to need a way to notify people in not-real-time, so we're going to have to both email people and distinguish between potential users when we present their results.  
+
+The next step will be to allow the user to identify their initial search items.  This is probably best done through a combination of a map interface, address search, and a drawing tool—either a "paint over the area that's interesting to you" or "draw a box around the area that's interesting to you".
+
+They'll have to do this 10-20 times, so we're going to need a way to save a queue of these in a job.  Individuals may need have multiple jobs, so we're going to need a way to associate what they're doing with a particular job out of their collection of jobs.  
+
+Once they've done this, we should probably make sure that the items they've selected share some set of similarities.  *(Kyle, is this possible?  Is this useful?)*  
+
+Once they've done that, we should allow them to set a search boundary for their full search.  We could either do that via text: "North America", "Pennsylvania", "Allegheny County" or via "Draw a box/polygon around your desired region".
+
+Finally, we should allow them to submit a job.  Hopefully, we can give them an idea of how long this will take.
+
 ## Step 5: Develop the Backend for searching
 
-For the prototype, how robust does this need to be?  DO we need to handle queueing jobs?  Does this need to be automated *at all*, or is "Kyle gets an email and kicks off the job via ssh" sufficient?
+For the prototype, how robust does this need to be?  DO we need to handle queuing jobs?  Does this need to be automated *at all*, or is "Kyle gets an email and kicks off the job via ssh" sufficient?
+
+How do we know when a search is completed?  
 
 ## Step 6: Notify the user
 
@@ -85,8 +102,14 @@ How should we do so?  Email is probably the easiest.  Do we want to have user ac
 
 ## Step 7: Browse the results
 
-Do we need a refine stage in here? 
+Do we need to provide the user with the ability to check in and see what progress has been made on their job?
+
+Do we need a refine stage in here, where they filter through the initial results and refine for a more granular search?
+
+Golan, I know that you've talked about adding additional tools to the result set.  Is that part of this prototype?  What are you thinking for that?
 
 ## Step 8: Download your Data
 
 What are appropriate formats for downloading this data?  CSV?  JSON?  GEOJSON?  A directory of images?
+
+How long do we plan on keeping an individual's results?  Are the results public?  Do we want to give people the option to *make* their results public?
