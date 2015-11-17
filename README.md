@@ -1,13 +1,15 @@
 # Terrapattern
-#### Golan Levin, Kyle McDonald & David Newbury
+##### Golan Levin, Kyle McDonald & David Newbury
 
-Enabling journalists, citizen scientists, humanitarian workers and others to detect “patterns of interest” in satellite imagery through an open-source tool. 
+> Enabling journalists, citizen scientists, humanitarian workers and others to detect “patterns of interest” in satellite imagery through an open-source tool. 
 
-The goal of this project is to provide researchers, journalists, citizen scientists, and artists the ability to quickly and easily scan extremely geographical areas for specific visual features. In particular, we are interested in so-called "soft" features; things that do not appear on maps.  Examples might include methane blowholes, oil derricks, large fiberglass lumberjacks, or illegal farms. 
+---
 
-For example, users could use the tool to identify destroyed buildings in conflict zones.
+The goal of this project is to provide researchers, journalists, citizen scientists, and artists the ability to quickly and easily scan extremely large geographical areas for specific visual features. In particular, we are interested in so-called "soft" features; things that do not appear on maps.  Examples might include methane blowholes, oil derricks, large fiberglass lumberjacks, or illegal farms. 
 
-We intend to create a web interface for this project that will allow web-savvy but non-expert users to identify examples of their desired feature on a map.  Once a small number of examples have been located, (~10-20 instances) and a desired geographical range has been established, the computer will then begin an exhaustive search of the entire area for those features.  We expect that this will take some time—on the order of hours. Once the computer has completed its search, it will notify the user, and provide them with a list of images and lat/lng pair for each found instance.
+Our hope is that this will allow people who do not work for government intelligence agencies or large hedge funds the ability to research and answer queestions about our world that are otherwise unknowable. For example, users could use the tool to identify destroyed buildings in conflict zones.
+
+In this initial prototype, we intend to create a web interface that will allow web-savvy but non-expert users to visually identify examples of their desired feature on a map.  Once approximately 10 to 20 examples of a type of geographical feature have been located, for instance 20 different swimming pools, and once a desired geographical range has been established, for instance "Los Angeles", the computer will then begin an exhaustive search of that entire geographical area for those features.  We expect that this will take some time: several hours, but less than a day. When the computer has completed its search it will notify the user and provide them with a list of images and latitude longitude coordinates for each found feature.
 
 *(Golan, feel free to add more stuff here, and correct what I've written.)*
 
