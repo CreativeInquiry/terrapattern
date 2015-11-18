@@ -5,6 +5,7 @@ require 'typhoeus'
 require 'json'
 require 'uri'
 require 'fileutils'
+require 'csv'
 
 
 CONCURRENT_DOWNLOADS = 100
@@ -15,12 +16,18 @@ IMAGE_SIZE = 256;
 CONTINENTAL_US = {s: 24.9493, w: -125.0011, n: 49.5904, e: -66.9326}
 DEFAULT_ZOOM = 18
 
-def get_json_from_openstreetmaps(key,val)
+$hydra = Typhoeus::Hydra.new
+
+$count = 0
+
+def get_json_from_openstreetmaps(key,val,constrain_to_usa = true)
   timeout = 600
   bounds = "#{CONTINENTAL_US[:s]},#{CONTINENTAL_US[:w]},#{CONTINENTAL_US[:n]},#{CONTINENTAL_US[:e]}"
-  str = "data=[out:json][timeout:#{timeout}];node[\"#{key}\"=\"#{val}\"](#{bounds});out skel qt 1000;"
+  bounds_string =  constrain_to_usa ? "(#{bounds})" : ""
+  str = "data=[out:json][timeout:#{timeout}];node[\"#{key}\"=\"#{val}\"]#{bounds_string};out skel qt 1000;"
   base_url = "http://overpass-api.de/api/interpreter?"
   url =  "#{base_url}#{URI.escape(str)}"
+  puts url
   response = Typhoeus.get(url, {followlocation: true, timeout: timeout})
   response.body
 end
@@ -31,7 +38,7 @@ def build_url(lat,lng,zoom=DEFAULT_ZOOM, size=IMAGE_SIZE)
   str
 end
 
-def download_images(key,val,label, zoom=DEFAULT_ZOOM)
+def download_images(key,val,label, zoom=DEFAULT_ZOOM, usa_only = true)
 
   dir = "#{EXPORT_PATH}#{label}"
   FileUtils.mkdir_p(dir)
@@ -41,12 +48,11 @@ def download_images(key,val,label, zoom=DEFAULT_ZOOM)
   if File.exist? json_path
     json_content = File.read(json_path)
   else
-    json_content = get_json_from_openstreetmaps(key,val)
+    json_content = get_json_from_openstreetmaps(key,val,usa_only)
     File.open(json_path, "w+") {|f| f.puts json_content}
   end
   elements = JSON.parse(json_content)["elements"]
 
-  hydra = Typhoeus::Hydra.new
   lookup = {}
   elements.each_slice(CONCURRENT_DOWNLOADS) do |slices|
     requests = []
@@ -55,8 +61,10 @@ def download_images(key,val,label, zoom=DEFAULT_ZOOM)
       filename = "#{label}_#{item["lat"]}_#{item["lon"]}.png"
       lookup[url] = filename
       unless File.exist? "#{dir}/#{filename}"
+        $count++
+        exit if $count > 8000
         request = Typhoeus::Request.new(url, {followlocation: true, timeout: 300})
-        hydra.queue(request)
+        $hydra.queue(request)
         requests.push request
       else
         #puts "skipping #{filename}"
@@ -64,12 +72,12 @@ def download_images(key,val,label, zoom=DEFAULT_ZOOM)
     end
 
     ## DOWNLOAD 'EM
-    hydra.run
+    $hydra.run
 
     ## SAVE THEM TO DISK
     responses = requests.map { |r|
       puts "#{r.url}: #{r.response.status_message}"
-      if r.response.status_message == 'OK'
+      if r.response.status_message == 'OK' &&  r.response.body.size > 5000
         File.open("#{dir}/#{lookup[r.url]}","wb") do |f|
           f.puts r.response.response_body
         end
@@ -82,11 +90,15 @@ def download_images(key,val,label, zoom=DEFAULT_ZOOM)
 
   lookup.values.each do |filename|
     path = "#{dir}/#{filename}"
-    sizes = IO.read(path)[0x10..0x18].unpack('NN') # hack for getting sizes from the bytes of a PNG
-    unless sizes[0] == IMAGE_SIZE && sizes[1] == IMAGE_SIZE
-      `mogrify -gravity north -extent  #{IMAGE_SIZE}x#{IMAGE_SIZE} #{path}`
+    if File.exist? path
+      sizes = IO.read(path)[0x10..0x18].unpack('NN') # hack for getting sizes from the bytes of a PNG
+      unless sizes[0] == IMAGE_SIZE && sizes[1] == IMAGE_SIZE
+        `mogrify -gravity north -extent  #{IMAGE_SIZE}x#{IMAGE_SIZE} #{path}`
+      end
     end
   end
 end
 
-download_images("leisure", "swimming_pool", "swimming_pool", 18)
+CSV.foreach("features.csv", headers: true) do |row|
+  download_images(row["key"],row["value"],row["label"],row["zoom"],row["us only"])
+end
