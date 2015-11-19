@@ -7,7 +7,7 @@
 
 The goal of this project is to provide researchers, journalists, citizen scientists, and artists the ability to quickly and easily scan extremely large geographical areas for specific visual features. In particular, we are interested in so-called "soft" features; things that do not appear on maps.  Examples might include methane blowholes, oil derricks, large fiberglass lumberjacks, or illegal farms. 
 
-Our hope is that this will allow people who do not work for government intelligence agencies or large hedge funds the ability to research and answer queestions about our world that are otherwise unknowable. For example, users could use the tool to identify destroyed buildings in conflict zones.
+Our hope is that this will allow people who do not work for government intelligence agencies or large hedge funds the ability to research and answer questions about our world that are otherwise unknowable. For example, users could use the tool to identify destroyed buildings in conflict zones.
 
 In this initial prototype, we intend to create a web interface that will allow web-savvy but non-expert users to visually identify examples of their desired feature on a map.  Once approximately 10 to 20 examples of a type of geographical feature have been located, for instance 20 different swimming pools, and once a desired geographical range has been established, for instance "Los Angeles", the computer will then begin an exhaustive search of that entire geographical area for those features.  We expect that this will take some time: several hours, but less than a day. When the computer has completed its search it will notify the user and provide them with a list of images and latitude longitude coordinates for each found feature.
 
@@ -34,20 +34,26 @@ There are eight steps for this project:
 
 ## Step 1:  Build the Training Set
 
-Kyle is our neural network trainer <small>(I am imagining him in a set of high black boots and a whip)</small> and will be writing some sort of magical code that will use math and such things to detect things that we cannot begin to describe.  *(Kyle, feel free to elaborate or clarify as needed.)*  This theoretical neural net needs to be trained on a set of tagged images.
+Kyle is our neural network trainer <small>(I am imagining him in a set of high black boots and a whip)</small> and will be writing some sort of magical code that will use math and such things to detect things that we cannot begin to describe.  This neural net needs to be trained on a set of tagged images.
 
-Kyle has asked for this to be delivered to him as a single directory, named `training_set`, containing 1000 folders, each named with its respective tag as a singular noun.  If the name contains multiple words, they will be concatenated into a single word, such as `swimmingpool` or `dunkindonuts`.Each folder will contain 1000 images of a satellite photograph containing an image of the entity described by the tag.
+Kyle has asked for this to be delivered to him as a single directory, named `training_set`, containing 1000 folders, each named with its respective tag as a singular noun.  If the name contains multiple words, they will be concatenated into a single word, such as `swimmingpool` or `dunkindonuts` (in ImageNet these categories are called "synsets").Each folder will contain 1000 images of a satellite photograph containing an image of the entity described by the tag.
 
-Each of these images will be a square 100px by 100px jpeg, compressed at 80%.  *(Kyle, please correct this spec with actual information).*
+In terms of resolution and format: for reference, ImageNet is distributed as JPGs averaging 482x415 pixels with the full dataset of 1.2M images coming to 138GB. This is about 4.3 bits per pixel. Before training, a center crop of the images is taken and resized to 224x224 pixels. So for our purposes it might make sense to store the images as 256x256 JPGs that average 35Kb per image, and then at train time I will downsample them to 128x128 pixels.
 
-Each of these images will be named with the tag name as well as the lat/lng combination of the image.  Each of these three datapoints will be separated by underscores. For example:  
+Each of these images will be named with the tag name as well as the lat/lng combination of the image.  Each of these three datapoints will be separated by underscores. For example:
 
 * My house, at lat: 40.481760, lng: -79.95402, would be recorded as `training_set/house/house_40.481760_-79.95402.jpg`
 * The Emlenton Swimming Pool, at 41.181354, -79.704974 would be recorded as `training_set/swimmingpool/swimmingpool_41.181354_-79.704974.jpg`
 
-*(Kyle, do we also want to distinguish these by source?  i.e., which service provided the image?  How about by zoom level?)*
+The filenames themselves are not super important, it's not even essential for them to be unique across the whole dataset. It might be best if the filenames are just sequentially numbered -- and then any additional data can be stored in a csv/tsv or json file with all the metadata (category, filename, latitude, longitude, source). Or the key-value store described in the next section.
 
-*(Kyle, what do we do if we have less that 1000 examples?  what do we do if we have more than 1000 examples?)*
+There will be one neural net per zoom level. To collect features at a different zoom level, we will need to train a different net.
+
+Training one net on images from multiple sources will make it more robust, assuming they are at the same scale / zoom level. If they are not exactly at the same zoom level, it's fine to resample them until they are. This only works for downsampling, I have no confidence in upsampling.
+
+If we have other channels besides red, green and blue (e.g., LANDSAT's 8 channels) then there are some interesting experiments we can try, but it may not be useful for the final tool. For example, we can try to predict the LANDSAT channels from the RGB image. Or we can predict LANDSAT channels along with a our feature vector (multimodal learning). We could also use it as an additional input to aid in prediction and feature generation, but if we don't have LANDSAT data for an area we cannot extract features. For me, working with RGB data alone is the first priority.
+
+Ideally we can collect exactly 1000 images per category, but if we have more or less in some categories it's fine. For example ImageNet contains 732 to 1300 images per category. If we can only collect a small number of categories (e.g., 50) we should have significantly more images per category (e.g., 10,000 images of each category).
 
 ### Generating the Images
 
@@ -56,7 +62,8 @@ In order to generate these images, we need to identify **One Million Things**.  
 * Visually distinctive
 * Visible from above
 * Large enough to be seen by satellite photography
-* *Are there other constraints?*
+* Should cover a significant portion of the image.
+* Is not necessarily centered.
 
 The steps needed to accomplish this are:
 
@@ -74,7 +81,9 @@ As a first pass, we'll be using the [OpenStreetMap tag database](http://taginfo.
 
 ## Step 2: Build a Neural Net
 
-Kyle, this is your baby.  I don't know enough to start here.
+The current plan is to follow the research generated by ImageNet recognition. Recent networks that we can train include [VGG-16](http://arxiv.org/abs/1409.1556) and possibly [GoogLeNet](http://arxiv.org/abs/1409.4842) (but it has high memory constraints and it may require too much fiddling for not much reward).
+
+There is a possibility that the features in satellite imagery do not correlate very well to the subjects of images from ImageNet. In this case we will have to think of it more as a segmentation problem, and we will train a different kind of model -- predicting pixel-labels from input images rather than a single label for the whole image.
 
 ## Step 3: Develop a Lookup
 
