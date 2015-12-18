@@ -15,6 +15,7 @@ EXPORT_PATH = "training_set/"
 IMAGE_SIZE = 256;
 CONTINENTAL_US = {s: 24.9493, w: -125.0011, n: 49.5904, e: -66.9326}
 DEFAULT_ZOOM = 18
+NUMBER_TO_DOWNLOAD = 1000
 
 $hydra = Typhoeus::Hydra.new
 
@@ -24,7 +25,7 @@ def get_json_from_openstreetmaps(key,val,constrain_to_usa = true)
   timeout = 600
   bounds = "#{CONTINENTAL_US[:s]},#{CONTINENTAL_US[:w]},#{CONTINENTAL_US[:n]},#{CONTINENTAL_US[:e]}"
   bounds_string =  constrain_to_usa ? "(#{bounds})" : ""
-  str = "data=[out:json][timeout:#{timeout}];node[\"#{key}\"=\"#{val}\"]#{bounds_string};out skel qt 1000;"
+  str = "data=[out:json][timeout:#{timeout}];node[\"#{key}\"=\"#{val}\"]#{bounds_string};out skel qt #{NUMBER_TO_DOWNLOAD};"
   base_url = "http://overpass-api.de/api/interpreter?"
   url =  "#{base_url}#{URI.escape(str)}"
   puts url
