@@ -55,6 +55,8 @@ If we have other channels besides red, green and blue (e.g., LANDSAT's 8 channel
 
 Ideally we can collect exactly 1000 images per category, but if we have more or less in some categories it's fine. For example ImageNet contains 732 to 1300 images per category. If we can only collect a small number of categories (e.g., 50) we should have significantly more images per category (e.g., 10,000 images of each category).
 
+Current OSM tags being used are here: <https://docs.google.com/spreadsheets/d/1y43HYDqW6a9f802u2Hktrq2aVldmf3kfvYjfsGtIzyE/edit?usp=sharing>
+
 ### Generating the Images
 
 In order to generate these images, we need to identify **One Million Things**.  Each tag, or category, needs to be something that is:
