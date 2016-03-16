@@ -1,2 +1,5 @@
 .env
 training_set/*
+.DS_Store
+download_ways/training_set/*
+download_nodes/training_set/*
