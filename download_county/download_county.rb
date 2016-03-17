@@ -11,11 +11,16 @@ Dotenv.load
 
 BOTTOM_CROP = 23
 IMAGE_SIZE = 256
-DEFAULT_ZOOM = 18
+DEFAULT_ZOOM = 19
 CONCURRENT_DOWNLOADS = 100
 SLEEP_BETWEEN_DOWNLOADS = 0
 dir = "#{File.dirname(__FILE__)}/results"
 FileUtils.mkdir_p(dir)
+
+## This is a rough estimate of the number of pixels at zoom level 18.
+#  Note that can never remember which is LAT and which is LNG.
+lngOffset = 0.001045
+latOffset = 0.001373
 
 $hydra = Typhoeus::Hydra.new
 
@@ -226,10 +231,7 @@ JSON.parse(str)["geometry"]["coordinates"].first.each do |lat,lng|
   minLng = lng if lng < minLng
 end
 
-## This is a rough estimate of the number of pixels at zoom level 18.
-#  Note that can never remember which is LAT and which is LNG.
-lngOffset = 0.001045
-latOffset = 0.001373
+
 
 
 # This is the silly Java-ish initialization for the geography engine
@@ -239,32 +241,41 @@ factory = ::RGeo::Geos.factory
 feature = RGeo::GeoJSON.decode(str, json_parser: :json)
 county_boundary = feature.geometry
 
-# This opens the file and puts in a header 
-f = File.open("#{dir}/points.csv", "w")
-f.puts "lat,lng"
-
-# This iterates through the points and adds a lat/lng pair
-# to the CSV for each point
 
 saved_points = []
 
-currentLat = minLat
-while currentLat <= maxLat
-  currentLng = minLng
-  while currentLng <= maxLng
-    point = factory.point(currentLat,currentLng)
-      if point.within?(county_boundary)
-        f.puts "#{currentLng},#{currentLat}"
-        saved_points.push({lng: currentLat, lat: currentLng})
-      end
-    currentLng += lngOffset
+path = "#{dir}/points.csv"
+
+if File.exist? path
+  File.foreach(path) do |line|
+    currentLat, currentLng = line.split(",")
+    next if currentLat == "lat"
+    saved_points.push({lat: currentLat.to_f, lng: currentLng.to_f})
   end
-  currentLat += latOffset
+else
+  # This opens the file and puts in a header 
+  f = File.open(path, "w")
+  f.puts "lat,lng"
+
+  # This iterates through the points and adds a lat/lng pair
+  # to the CSV for each point
+  currentLat = minLat
+  while currentLat <= maxLat
+    currentLng = minLng
+    while currentLng <= maxLng
+      point = factory.point(currentLat,currentLng)
+        if point.within?(county_boundary)
+          f.puts "#{currentLng.round(7)},#{currentLat.round(7)}"
+          saved_points.push({lng: currentLat.round(7), lat: currentLng.round(7)})
+        end
+      currentLng += lngOffset/2
+    end
+    currentLat += latOffset/2
+  end
+
+  # Clean up after yourself, says your mother.
+  f.close
 end
-
-# Clean up after yourself, says your mother.
-f.close
-
 #--- 
 def build_url(lat,lng,zoom=DEFAULT_ZOOM, size=IMAGE_SIZE)
   str = 'https://maps.googleapis.com/maps/api/staticmap?maptype=satellite&center='
@@ -279,8 +290,10 @@ label = JSON.parse(str)["properties"]["NAME"]
 saved_points[0..20].each_slice(CONCURRENT_DOWNLOADS) do |slices|
   requests = []
   slices.each do |item|
-    url = build_url(item[:lat],item[:lng], DEFAULT_ZOOM)
-    filename = "#{label}_#{item[:lat]}_#{item[:lng]}_z#{DEFAULT_ZOOM}.png"
+    lat = item[:lat]
+    lng = item[:lng]
+    url = build_url(lat,lng, DEFAULT_ZOOM)
+    filename = "#{label}_#{lat}_#{lng}_z#{DEFAULT_ZOOM}.png"
     lookup[url] = filename
     unless File.exist? "#{dir}/#{filename}"
       request = Typhoeus::Request.new(url, {followlocation: true, timeout: 300})
