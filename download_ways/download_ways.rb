@@ -33,7 +33,7 @@ def get_json_from_openstreetmaps(key,val,constrain_to_usa = true)
   #str = "data=[out:json][timeout:#{timeout}];way[\"#{key}\"=\"#{val}\"](#{bounds_string});foreach((._;>;);out center #{NUMBER_TO_DOWNLOAD};);"
 
   #This string fetches almost all geometry of a way except for center points. Does restrict number to download. 
-  str = "data=[out:json][timeout:#{timeout}];way[\"#{key}\"=\"#{val}\"]#{bounds_string};out meta geom #{NUMBER_TO_DOWNLOAD};out count;"
+  str = "data=[out:json][timeout:#{timeout}];way[\"#{key}\"=\"#{val}\"]#{bounds_string};out count;out meta geom #{NUMBER_TO_DOWNLOAD};"
 
   print str
   base_url = "http://overpass-api.de/api/interpreter?"
