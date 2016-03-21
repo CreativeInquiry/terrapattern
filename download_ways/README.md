@@ -15,8 +15,8 @@ download_ways/
     download_ways.rb	
     training_data/			--> can be empty. For running the download_ways.rb script
   data/		        
-  	less1000/				--> stores JSONs for categories with more than 1000 ways in the U.S. 
-  	more1000/				--> stores JSONs for categories with less than 1000 ways in the U.S. 
+  	less500/				--> stores JSONs for categories with more than 500 ways in the U.S. 
+  	more500/				--> stores JSONs for categories with less than 500 ways in the U.S. 
   visualize_ways_map/		        
   	L.Map.Deflate.js				
   	waysmapview.html		--> map to view locations and perimiter of ways
