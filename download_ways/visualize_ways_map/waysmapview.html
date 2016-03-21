@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>OSM Ways View</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <style>
+    body,
+    html,
+    .container,
+    .row {
+        width: 100%;
+    }
+    
+    #map,
+    .mapcontainer {
+        height: 100vh;
+        padding: 0px;
+    }
+    
+    .container {
+        padding: 0px;
+    }
+    
+    .listcontainer .list-group {
+        height: 100vh;
+        overflow-y: scroll;
+        padding: 0px;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 listcontainer">
+                <ul class="list-group">
+                </ul>
+            </div>
+            <div class="col-md-9 mapcontainer">
+                <div id="map"></div>
+            </div>
+        </div>
+    </div>
+    <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+    <script src="L.Map.Deflate.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script>
+    var waytags = [
+        "amenity-bank",
+        "amenity-bar",
+        "amenity-bench",
+        "amenity-bicycle_parking",
+        "amenity-boat_storage",
+        "amenity-cafe",
+        "amenity-car_wash",
+        "amenity-cinema",
+        "amenity-clinic",
+        "amenity-college",
+        "amenity-community_centre",
+        "amenity-courthouse",
+        "amenity-dentist",
+        "amenity-doctors",
+        "amenity-fast_food",
+        "amenity-fire_station",
+        "amenity-fountain",
+        "amenity-fuel",
+        "amenity-grave_yard",
+        "amenity-hospital",
+        "amenity-kindergarten",
+        "amenity-library",
+        "amenity-parking",
+        "amenity-parking_space",
+        "amenity-pharmacy",
+        "amenity-place_of_worship",
+        "amenity-police",
+        "amenity-post_office",
+        "amenity-prison",
+        "amenity-pub",
+        "amenity-restaurant",
+        "amenity-school",
+        "amenity-shelter",
+        "amenity-social_facility",
+        "amenity-theatre",
+        "amenity-toilets",
+        "amenity-townhall",
+        "amenity-university",
+        "amenity-veterinary",
+        "barrier-bollard",
+        "barrier-ditch",
+        "barrier-fence",
+        "barrier-gate",
+        "barrier-guard_rail",
+        "barrier-hedge",
+        "barrier-kerb",
+        "barrier-line",
+        "barrier-retaining_wall",
+        "barrier-traffic_island",
+        "barrier-wall",
+        "barrier-wire_fence",
+        "bridge-boardwalk",
+        "bridge-viaduct",
+        "building-apartments",
+        "building-barn",
+        "building-cabin",
+        "building-church",
+        "building-civic",
+        "building-college",
+        "building-commercial",
+        "building-construction",
+        "building-detached",
+        "building-dormitory",
+        "building-farm",
+        "building-garage",
+        "building-garages",
+        "building-greenhouse",
+        "building-hangar",
+        "building-hospital",
+        "building-hotel",
+        "building-house",
+        "building-hut",
+        "building-industrial",
+        "building-mobile_home",
+        "building-office",
+        "building-public",
+        "building-residential",
+        "building-residentiel1",
+        "building-retail",
+        "building-roof",
+        "building-school",
+        "building-semidetached_house",
+        "building-shed",
+        "building-silo",
+        "building-stable",
+        "building-static_caravan",
+        "building-station",
+        "building-storage",
+        "building-storage_tank",
+        "building-store",
+        "building-terrace",
+        "building-university",
+        "building-warehouse",
+        "electrified-contact_line",
+        "highway-abandoned",
+        "highway-bridleway",
+        "highway-construction",
+        "highway-cycleway",
+        "highway-footway",
+        "highway-living_street",
+        "highway-motorway",
+        "highway-motorway_link",
+        "highway-path",
+        "highway-pedestrian",
+        "highway-primary",
+        "highway-primary_link",
+        "highway-proposed",
+        "highway-raceway",
+        "highway-residential",
+        "highway-rest_area",
+        "highway-road",
+        "highway-secondary",
+        "highway-secondary_link",
+        "highway-service",
+        "highway-steps",
+        "highway-tertiary",
+        "highway-tertiary_link",
+        "highway-track",
+        "highway-trunk",
+        "highway-trunk_link",
+        "highway-unclassified",
+        "junction-jughandle",
+        "junction-roundabout",
+        "junction-spui",
+        "landuse-allotments",
+        "landuse-basin",
+        "landuse-brownfield",
+        "landuse-cemetery",
+        "landuse-commercial",
+        "landuse-conservation",
+        "landuse-construction",
+        "landuse-farm",
+        "landuse-farmland",
+        "landuse-farmyard",
+        "landuse-forest",
+        "landuse-grass",
+        "landuse-greenfield",
+        "landuse-industrial",
+        "landuse-landfill",
+        "landuse-meadow",
+        "landuse-military",
+        "landuse-orchard",
+        "landuse-quarry",
+        "landuse-railway",
+        "landuse-recreation_ground",
+        "landuse-religious",
+        "landuse-reservoir",
+        "landuse-reservoir_watershed",
+        "landuse-residential",
+        "landuse-retail",
+        "landuse-village_green",
+        "landuse-vineyard",
+        "leisure-common",
+        "leisure-dog_park",
+        "leisure-garden",
+        "leisure-golf_course",
+        "leisure-ice_rink",
+        "leisure-marina",
+        "leisure-nature_reserve",
+        "leisure-park",
+        "leisure-pitch",
+        "leisure-playground",
+        "leisure-recreation_ground",
+        "leisure-slipway",
+        "leisure-sports_centre",
+        "leisure-stadium",
+        "leisure-swimming_pool",
+        "leisure-track",
+        "man_made-breakwater",
+        "man_made-cutline",
+        "man_made-dike",
+        "man_made-dyke",
+        "man_made-groyne",
+        "man_made-pier",
+        "man_made-pipeline",
+        "man_made-reservoir_covered",
+        "man_made-silo",
+        "man_made-storage",
+        "man_made-storage_tank",
+        "man_made-tower",
+        "man_made-wastewater_plant",
+        "man_made-water_tank",
+        "man_made-water_tower",
+        "natural-bare_rock",
+        "natural-beach",
+        "natural-cliff",
+        "natural-coastline",
+        "natural-glacier",
+        "natural-grassland",
+        "natural-heath",
+        "natural-land",
+        "natural-landform",
+        "natural-marsh",
+        "natural-ridge",
+        "natural-rock",
+        "natural-sand",
+        "natural-scree",
+        "natural-scrub",
+        "natural-stone",
+        "natural-tree_row",
+        "natural-water",
+        "natural-wetland",
+        "natural-wood",
+        "power-busbar",
+        "power-generator",
+        "power-line",
+        "power-minor_line",
+        "power-substation",
+        "railway-abandoned",
+        "railway-dismantled",
+        "railway-disused",
+        "railway-light_rail",
+        "railway-miniature",
+        "railway-monorail",
+        "railway-narrow_gauge",
+        "railway-platform",
+        "railway-preserved",
+        "railway-rail",
+        "railway-razed",
+        "railway-station",
+        "railway-subway",
+        "railway-tram",
+        "religion-christian",
+        "religion-jewish",
+        "service-alley",
+        "service-crossover",
+        "service-drive-through",
+        "service-driveway",
+        "service-emergency_access",
+        "service-irrigation",
+        "service-parking",
+        "service-parking_aisle",
+        "service-siding",
+        "service-spur",
+        "service-yard",
+        "sport-american_football",
+        "sport-archery",
+        "sport-athletics",
+        "sport-baseball",
+        "sport-basketball",
+        "sport-beachvolleyball",
+        "sport-canoe",
+        "sport-equestrian",
+        "sport-golf",
+        "sport-hockey",
+        "sport-multi",
+        "sport-running",
+        "sport-skateboard",
+        "sport-soccer",
+        "sport-swimming",
+        "sport-tennis",
+        "sport-volleyball",
+        "surface-asphalt",
+        "surface-bricks",
+        "surface-cement",
+        "surface-cobblestone",
+        "surface-compacted",
+        "surface-concrete",
+        "surface-concrete_plates",
+        "surface-dirt",
+        "surface-earth",
+        "surface-fine_gravel",
+        "surface-grass",
+        "surface-gravel",
+        "surface-ground",
+        "surface-paved",
+        "surface-paving_stones",
+        "surface-pebblestone",
+        "surface-rocky",
+        "surface-sand",
+        "surface-unpaved",
+        "surface-wood",
+        "wall-dry_stone",
+        "water-lake",
+        "water-pond",
+        "water-reservoir",
+        "water-river",
+        "water-salt",
+        "water-salt_pool",
+        "water-stream",
+        "water-tidal",
+        "waterway-artificial",
+        "waterway-canal",
+        "waterway-dam",
+        "waterway-derelict_canal",
+        "waterway-ditch",
+        "waterway-dock",
+        "waterway-drain",
+        "waterway-rapids",
+        "waterway-river",
+        "waterway-riverbank",
+        "waterway-waterfall",
+        "waterway-weir",
+        "wetland-bog",
+        "wetland-marsh",
+        "wetland-saltmarsh",
+        "wetland-swamp",
+        "wetland-tidalflat",
+        "wetland-wet_meadow"
+    ];
+
+    $(window).load(function() {
+        for (i = 0; i < waytags.length; i++) {
+            var listelement = "<a href='#' class='list-group-item'>" + waytags[i] + "</a>"
+
+            $(".list-group").append(listelement);
+        }
+
+        $('a.list-group-item').click(function(e) {
+            var tag = e.target.innerHTML;
+            loadjson(tag);
+        });
+    });
+
+    //Load the leaflet map
+    var mymap = L.map.deflate('map', {
+        minSize: 5
+    }).setView([39.238766, -98.542328], 18);
+
+    loadmaptile();
+
+    //Load the tile the base map tiles
+    function loadmaptile() {
+        L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw', {
+            id: 'mapbox.streets'
+        }).addTo(mymap);
+    }
+
+    //Clear all the polygons on the map
+    function clearmarkers() {
+        mymap.eachLayer(function(layer) {
+            mymap.removeLayer(layer);
+        });
+    }
+
+    //Load a new json file with ways
+    function loadjson(tag) {
+        //Create the path for the json file
+        var main_directory = "../data/more1000";
+        var path = main_directory + "/" + tag + "/" + tag + ".json";
+        var prev = path;
+        console.log(path);
+
+        clearmarkers();
+        loadmaptile();
+
+        //Load the json file
+        $.getJSON(path, function(json) {
+
+            //For each way
+            for (i = 1; i < 1000; i++) {
+                var way = json.elements[i];
+                if (!(typeof way === "undefined")) { //Check because in some cases json file with have less than 1000 ways
+                    var size = way.geometry.length;
+
+                    var latlons = [];
+                    //For each node in the way
+                    for (j = 0; j < size; j++) {
+                        latlons.push(way.geometry[j]);
+                    }
+                    L.polygon(latlons).addTo(mymap); //load the way onto the map
+                }
+            }
+        });
+    }
+    </script>
+</body>
+</htm
