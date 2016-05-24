@@ -1,0 +1,5 @@
+key,value,label,zoom,usa only
+waterway,stream,waterway-stream,18,true
+highway,residential,highway-residential,18,true
+highway,service,highway-service,18,true
+highway,track,highway-track,18,true

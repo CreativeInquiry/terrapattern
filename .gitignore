@@ -1,0 +1,8 @@
+.env
+.DS_Store
+download_ways/training_set/*
+download_ways/data/
+download_nodes/training_set/*
+download_county/results/*
+process_ways/terraways/data/*
+# download_nodes/download_features.rb
