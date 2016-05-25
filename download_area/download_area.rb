@@ -12,10 +12,10 @@ Dotenv.load
 
 # Adjust for different zoom levels
 #DEFAULT_ZOOM = 18 
-#lngOffset = 0.001386
+#lngOffset = 0.001707 #Calculated for latitude 25.769322
 #latOffset = 0.001373
 DEFAULT_ZOOM = 19
-lngOffset = 0.000694
+lngOffset = 0.000853 #Calculated for latitude 25.769322
 latOffset = 0.000686
 
 dir = "#{File.dirname(__FILE__)}/results" # Directory to save a csv file with all the lat lon points to download tiles for
