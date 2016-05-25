@@ -15,7 +15,7 @@ EXPORT_PATH = "training_set/"
 IMAGE_SIZE = 256;
 CONTINENTAL_US = {s: 24.9493, w: -125.0011, n: 49.5904, e: -66.9326}
 DEFAULT_ZOOM = 18
-NUMBER_TO_DOWNLOAD = 12
+NUMBER_TO_DOWNLOAD = 1000
 
 $hydra = Typhoeus::Hydra.new
 
