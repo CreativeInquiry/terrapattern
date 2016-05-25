@@ -1,7 +1,7 @@
-Visualizing Location of Ways
+Download ways data and visualize them on a map
 ======
 
-To view the perimiter of each way and its location you can use a simple webpage in: visualize_ways_map/waysmapview.html.
+This folder contains two main scripts: one that downloads 1000 ways for a particular OSM category into a json file and another script that helps you visualize where those ways are located across a map. 
 
 
 ## Folder structure
@@ -17,13 +17,18 @@ download_ways/
   data/		        
   	less500/				--> stores JSONs for categories with more than 500 ways in the U.S. 
   	more500/				--> stores JSONs for categories with less than 500 ways in the U.S. 
-  visualize_ways_map/		        
+  visualize_ways_map/		--> to view the perimiter of each way and its location you can use a simple webpage waysmapview.html       
   	L.Map.Deflate.js				
   	waysmapview.html		--> map to view locations and perimiter of ways
 ```
 
+## How to run download_ways.rb
 
-## What you need
+Assuming you have set your environment variables in a .env file in the parent directory and that you have a features.csv file with the OSM categories to download, simply run
+
+	ruby download_ways/download_ways/download_ways.rb
+
+## How to run visualize_ways_map
 * The way JSON files (the data) must be in a folder called "data/more1000".
 * Run a server from the root directory (from download_ways). If not, the map page won't be able to access the "data/more1000" folder. 
 * Just zoom out the map the first time you load the page
