@@ -1,15 +1,17 @@
 # Terrapattern
-##### Golan Levin, Kyle McDonald & David Newbury
+#### Golan Levin, David Newbury, and Kyle McDonald with Irene Alvarado, Aman Tiwari, and Manzil Zaheer
 
 > Enabling journalists, citizen scientists, humanitarian workers and others to detect “patterns of interest” in satellite imagery through an open-source tool. 
 
 ---
 
+###*These notes are out of date!*
+
 The goal of this project is to provide researchers, journalists, citizen scientists, and artists the ability to quickly and easily scan extremely large geographical areas for specific visual features. In particular, we are interested in so-called "soft" features; things that do not appear on maps.  Examples might include methane blowholes, oil derricks, large fiberglass lumberjacks, or illegal farms. 
 
 Our hope is that this will allow people who do not work for government intelligence agencies or large hedge funds the ability to research and answer questions about our world that are otherwise unknowable. For example, users could use the tool to identify destroyed buildings in conflict zones.
 
-In this initial prototype, we intend to create a web interface that will allow web-savvy but non-expert users to visually identify examples of their desired feature on a map.  Once approximately 10 to 20 examples of a type of geographical feature have been located, for instance 20 different swimming pools, and once a desired geographical range has been established, for instance "Los Angeles", the computer will then begin an exhaustive search of that entire geographical area for those features.  We expect that this will take some time: several hours, but less than a day. When the computer has completed its search it will notify the user and provide them with a list of images and latitude longitude coordinates for each found feature.
+In this initial prototype, we intend to create a web interface that will allow web-savvy but non-expert users to visually identify examples of their desired feature on a map.  Given an example of a type of geographical feature, such as a baseball diamond, and once a desired geographical range has been established, for instance "Los Angeles", the computer will then begin an exhaustive search of that entire geographical area for those features.
 
 ## Wiki
 
@@ -32,9 +34,9 @@ There are eight steps for this project:
 
 ## Step 1:  Build the Training Set
 
-Kyle is our neural network trainer <small>(I am imagining him in a set of high black boots and a whip)</small> and will be writing some sort of magical code that will use math and such things to detect things that we cannot begin to describe.  This neural net needs to be trained on a set of tagged images.
+A DCNN neural net needs to be trained on a set of tagged images.
 
-Kyle has asked for this to be delivered to him as a single directory, named `training_set`, containing 1000 folders, each named with its respective tag as a singular noun.  If the name contains multiple words, they will be concatenated into a single word, such as `swimmingpool` or `dunkindonuts` (in ImageNet these categories are called "synsets").Each folder will contain 1000 images of a satellite photograph containing an image of the entity described by the tag.
+This should to be delivered to him as a single directory, named `training_set`, containing (ideally) 1000 folders, each named with its respective tag as a singular noun.  If the name contains multiple words, they will be concatenated into a single word, such as `swimmingpool` or `dunkindonuts` (in ImageNet these categories are called "synsets").Each folder will contain (ideally) 1000 images of a satellite photograph containing an image of the entity described by the tag.
 
 In terms of resolution and format: for reference, ImageNet is distributed as JPGs averaging 482x415 pixels with the full dataset of 1.2M images coming to 138GB. This is about 4.3 bits per pixel. Before training, a center crop of the images is taken and resized to 224x224 pixels. So for our purposes it might make sense to store the images as 256x256 JPGs that average 35Kb per image, and then at train time I will downsample them to 128x128 pixels.
 
@@ -87,25 +89,13 @@ There is a possibility that the features in satellite imagery do not correlate v
 
 ## Step 3: Develop a Lookup
 
-Kyle, you and I should work together on this, if only to develop a "contract" for how we will interface here.  If I remember correctly from our dinner together, the idea here is to create a hashtable of features and locations, so that the search will not need to actually re-process each image, but instead do something more efficient.  
-
-Would the most appropriate way for this to work be for me the front-end to provide a set of square images, like the ones we're doing feature detection on?  a set of lat/lng pairs?  a geographical boundary of the perimeter of the region of interest? 
+We create a hashtable of features and locations, so that the search will not need to actually re-process each image, but instead do something more efficient.  
 
 ## Step 4: Create a UI for identifying features and ranges
 
-Golan, we should define exactly what we think that people will do here.
-
-My thoughts are that we would begin by allowing the user to create an account.  Unless the prototype is entirely designed to be used by *us*, we're going to need a way to notify people in not-real-time, so we're going to have to both email people and distinguish between potential users when we present their results.  
-
-The next step will be to allow the user to identify their initial search items.  This is probably best done through a combination of a map interface, address search, and a drawing tool—either a "paint over the area that's interesting to you" or "draw a box around the area that's interesting to you".
-
-They'll have to do this 10-20 times, so we're going to need a way to save a queue of these in a job.  Individuals may need have multiple jobs, so we're going to need a way to associate what they're doing with a particular job out of their collection of jobs.  
-
-Once they've done this, we should probably make sure that the items they've selected share some set of similarities.  *(Kyle, is this possible?  Is this useful?)*  
+We allow the user to identify their initial search item. This is done through a combination of a map interface, address search, and a drawing tool—either a "paint over the area that's interesting to you" or "draw a box around the area that's interesting to you". 
 
 Once they've done that, we should allow them to set a search boundary for their full search.  We could either do that via text: "North America", "Pennsylvania", "Allegheny County" or via "Draw a box/polygon around your desired region".
-
-Finally, we should allow them to submit a job.  Hopefully, we can give them an idea of how long this will take.
 
 ## Step 5: Develop the Backend for searching
 
