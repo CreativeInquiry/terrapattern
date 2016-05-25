@@ -25,7 +25,7 @@ def get_json_from_openstreetmaps(key,val,constrain_to_usa = false)
   timeout = 20000
   bounds = "#{CONTINENTAL_US[:s]},#{CONTINENTAL_US[:w]},#{CONTINENTAL_US[:n]},#{CONTINENTAL_US[:e]}"
   bounds_string =  constrain_to_usa ? "(#{bounds})" : ""
-  str = "data=[out:json][timeout:#{timeout}];node[\"#{key}\"=\"#{val}\"]#{bounds_string};out skel qt #{NUMBER_TO_DOWNLOAD};"
+  str = "data=[out:json][timeout:#{timeout}][maxsize:1073741824];node[\"#{key}\"=\"#{val}\"]#{bounds_string};out count;out skel qt #{NUMBER_TO_DOWNLOAD};"
   base_url = "http://overpass-api.de/api/interpreter?"
   url =  "#{base_url}#{URI.escape(str)}"
   puts url
