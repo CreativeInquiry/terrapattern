@@ -7,7 +7,7 @@ require 'uri'
 require 'fileutils'
 require 'csv'
 
-DEFAULT_ZOOM = 17
+DEFAULT_ZOOM = 18
 CONCURRENT_DOWNLOADS = 100
 SLEEP_BETWEEN_DOWNLOADS = 0
 BOTTOM_CROP = 23;
@@ -95,7 +95,7 @@ def download_images(key,val,label, zoom=DEFAULT_ZOOM, usa_only = false)
   end
 
   lookup.values.each do |filename|
-    path = "#{dir}/#{filename}\n"
+    path = "#{dir}/#{filename}"
     print path
     if File.exist? path
       sizes = IO.read(path)[0x10..0x18].unpack('NN') # hack for getting sizes from the bytes of a PNG
