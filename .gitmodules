@@ -1,0 +1,3 @@
+[submodule "CoverTree"]
+	path = CoverTree
+	url = https://github.com/aman-tiwari/CoverTree
