@@ -19,6 +19,3 @@ DEPENDENCIES
   rgeo
   rgeo-geojson
   typhoeus
-
-BUNDLED WITH
-   1.10.6

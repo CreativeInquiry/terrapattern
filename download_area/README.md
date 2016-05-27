@@ -55,6 +55,14 @@ Source: [http://physics.nist.gov/cuu/Units/meter.html](http://physics.nist.gov/c
 
 ## How to run
 
+Make sure you have these libraries
+	
+	brew install geos
+	
+and
+	
+	gem install rgeos
+
 Assuming you have set your environment variables in a .env file in the parent directory, simply run
 
 	ruby download_area/download_area.rb
