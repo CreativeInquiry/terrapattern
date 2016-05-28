@@ -24,7 +24,7 @@ local function findClasses(dir)
 
    local classToIdx = {}
 
-   local file = io.open("./datasets/labels.txt", "r");
+   local file = io.open("./labels.txt", "r");
    print('Loaded labels.txt')
 
    local classList = {}
