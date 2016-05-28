@@ -1,10 +1,6 @@
-### Extract Features
+### ResNet
 ----
-Use `extract_features.lua` to run a trained model over a set of images and save the feature vectors generated. 
-
-###### To use
-1. Make a file list of the image files `ls image-folder > image-filenames.txt`
-2. `th extract_features.lua path/to/model.t7 image-filenames.txt path/to/images-folder output-filename.t7`
+We used a 34-layer ResNet, [implemented by Facebook](https://github.com/facebook/fb.resnet.torch). This was trained for ~4 days, using a single NVIDIA GTX-980. The final top-5 error on the validation set reached was **25.609%** and the final top-1 error was **49.201**.
 
 ### NYC Demo IPyNB
 ----
