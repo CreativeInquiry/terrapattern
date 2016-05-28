@@ -11,7 +11,7 @@
 
 local image = require 'image'
 local paths = require 'paths'
-local t = require 'datasets/transforms'
+local t = require 'transforms'
 local ffi = require 'ffi'
 
 local M = {}
