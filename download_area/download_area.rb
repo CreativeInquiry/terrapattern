@@ -175,9 +175,7 @@ else
 end
 #--- 
 def build_url(lat,lng,zoom=DEFAULT_ZOOM, size=IMAGE_SIZE)
-  str = 'https://maps.googleapis.com/maps/api/staticmap?maptype=satellite&center='
-  str << "#{lat},#{lng}&zoom=#{zoom}&size=#{size}x#{size+BOTTOM_CROP}&key=#{ENV['GMAPS_KEY']}"
-  str
+  raise("No URL Defined")
 end
 
 lookup = {}
