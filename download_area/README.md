@@ -61,7 +61,7 @@ Make sure you have these libraries
 	
 and
 	
-	gem install rgeos
+	gem install rgeo
 
 Assuming you have set your environment variables in a .env file in the parent directory, simply run
 
